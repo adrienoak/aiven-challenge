@@ -2,9 +2,11 @@ import { createMachine, assign } from "xstate";
 
 type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 
-type Coords = Writeable<Pick<GeolocationCoordinates, "latitude" | "longitude">>;
+export type Coords = Writeable<
+  Pick<GeolocationCoordinates, "latitude" | "longitude">
+>;
 
-type GeoLocationMachineSchema = Partial<Coords> & {
+export type GeoLocationMachineSchema = Partial<Coords> & {
   error?: NotSupportedError | GeolocationPositionError;
 };
 

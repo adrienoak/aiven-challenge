@@ -24,6 +24,7 @@ describe("getCloudsByProviders", () => {
   }
   it("should create the necessary data structure to house all providers by cloud", () => {
     const mockAws = makeMock("aws-something");
+    const mockAws2 = makeMock("aws-something-2");
     const mockGoogle = makeMock("google-something");
     const mockAzure = makeMock("azure-something");
     const mockDigitalOcean = makeMock("do-something");
@@ -35,6 +36,7 @@ describe("getCloudsByProviders", () => {
       mockAzure.mock,
       mockDigitalOcean.mock,
       mockUpCloud.mock,
+      mockAws2.mock,
     ];
 
     const result = getCloudsByProviders(clouds);
@@ -42,6 +44,7 @@ describe("getCloudsByProviders", () => {
     expect(result).toEqual({
       aws: {
         [mockAws.name]: mockAws.mock,
+        [mockAws2.name]: mockAws2.mock,
       },
       google: {
         [mockGoogle.name]: mockGoogle.mock,
