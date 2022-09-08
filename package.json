@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.2.3",
+    "@xstate/react": "^3.0.1",
     "axios": "^0.27.2",
     "geolib": "^3.3.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "xstate": "^4.33.5"
   },
   "devDependencies": {
     "@testing-library/dom": "^8.17.1",
