@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { getRegions, ICloudInformation } from "../api/clouds";
+import { Choice } from "./Choices";
+import { Container } from "./Container";
+import { DbCard } from "./DBCard";
+import { DbRendered } from "./DbRendered";
+import { OptionHeader } from "./OptionHeader";
 
 export function ByRegion({
   data = [],
@@ -15,40 +20,30 @@ export function ByRegion({
   }, [data]);
 
   const [selected, setSelected] = useState("" as keyof typeof struct);
-  console.log("selected:", selected);
 
   useEffect(() => {
     setSelected(Object.keys(struct)[0]);
   }, [struct]);
 
-  const userRegion = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  console.log("userRegion:", userRegion);
-  console.log("providers:", getRegions(data));
-
   return (
-    <div>
-      <div style={{ display: "flex" }}>
-        {regions.map((e) => {
-          return (
-            <div
-              style={{
-                margin: "0 12px 0 0",
-                borderRight: "1px solid green",
-                cursor: "pointer",
-                borderBottom: selected === e ? "1px solid yellow" : "",
-              }}
-              key={e}
-              onClick={() => setSelected(e)}
-            >
-              {e}
-            </div>
-          );
+    <Container>
+      <OptionHeader
+        options={regions}
+        map={(e) => (
+          <Choice
+            onClick={() => setSelected(e)}
+            option={e}
+            selected={e === selected}
+          />
+        )}
+      />
+      {/* <div className=" grid gap-x-4 gap-y-4 md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-min justify-center">
+        {Object.values(struct[selected] ?? {}).map((e) => {
+          return <DbCard key={e.cloud_name} db={e} />;
         })}
-      </div>
-      <hr />
-      {Object.values(struct[selected] ?? {}).map((e) => {
-        return <div key={e.cloud_description}>{e.cloud_name}</div>;
-      })}
-    </div>
+
+      </div> */}
+      <DbRendered options={Object.values(struct[selected] ?? {})} />
+    </Container>
   );
 }

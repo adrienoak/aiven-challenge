@@ -8,9 +8,10 @@ type PaginationEvent<T> =
   | {
       type: "NEXT_PAGE";
     }
-  | { type: "PREV_PAGE" };
+  | { type: "PREV_PAGE" }
+  | { type: "JUMP_TO_PAGE"; page: number };
 
-export const makePaginationMachine = <T>(data: T[], perPage = 10) => {
+export const makePaginationMachine = <T>(data: T[], perPage = 9) => {
   return createMachine(
     {
       initial: "idle",
@@ -20,7 +21,7 @@ export const makePaginationMachine = <T>(data: T[], perPage = 10) => {
       tsTypes: {} as import("./pagination.machine.typegen").Typegen0,
       context: {
         total: 0,
-        current: 1,
+        current: 0,
         perPage,
         data,
         display: undefined as undefined | T[],
@@ -43,6 +44,10 @@ export const makePaginationMachine = <T>(data: T[], perPage = 10) => {
               cond: "canGoPrev",
               actions: "goPrev",
             },
+            JUMP_TO_PAGE: {
+              actions: "jumpToPage",
+              cond: "pageIsPossible",
+            },
           },
         },
       },
@@ -50,10 +55,15 @@ export const makePaginationMachine = <T>(data: T[], perPage = 10) => {
     {
       guards: {
         canGoNext(context) {
-          return context.current < context.total;
+          return context.current + 2 <= context.total;
         },
         canGoPrev(context) {
-          return context.current > 1;
+          return context.current > 0;
+        },
+        pageIsPossible(ctx, event) {
+          const { page } = event;
+
+          return page >= 0 && page <= ctx.total;
         },
       },
       actions: {
@@ -68,11 +78,13 @@ export const makePaginationMachine = <T>(data: T[], perPage = 10) => {
         }),
         goNext: assign({
           current: (ctx) => {
-            console.log("HERE?");
             return ++ctx.current;
           },
         }),
         goPrev: assign({ current: (ctx) => --ctx.current }),
+        jumpToPage: assign({
+          current: (_, event) => event.page,
+        }),
       },
     }
   );

@@ -1,27 +1,28 @@
 import { useMachine } from "@xstate/react";
 import { useEffect, useMemo, useState } from "react";
 import { getByLocation, ICloudInformation } from "../api/clouds";
-import { GeoLocationMachineSchema } from "../machine/geo-location.machine";
+import { useCoordinates } from "../App";
 import { makePaginationMachine } from "../machine/pagination.machine";
+import { Container } from "./Container";
+import { DbRendered } from "./DbRendered";
+import { Pagination } from "./Pagination";
 
-const perPage = 10;
+const perPage = 15;
 
 export function ByProximity({
-  context,
   data = [],
 }: {
   data: ICloudInformation[] | undefined;
-  context: GeoLocationMachineSchema;
 }) {
-  const { latitude, longitude } = context as Required<
-    Omit<GeoLocationMachineSchema, "error">
-  >;
+  const { latitude, longitude } = useCoordinates();
 
   const options = useMemo(() => {
-    return getByLocation({ latitude, longitude }, data);
+    return getByLocation(
+      { latitude, longitude },
+      data
+    ) as unknown as ICloudInformation[];
   }, [latitude, longitude, data]);
 
-  console.log("options:", options);
   const machineMaker = useMemo(() => {
     return makePaginationMachine(options);
   }, [options]);
@@ -34,37 +35,26 @@ export function ByProximity({
     send({ type: "TOTAL_PAGES", data: options });
   }, options);
 
-  const [page, setPage] = useState(0);
-
-  function setPagination(number: -1 | 1) {
-    if (page === 0 && number === -1) {
-      return;
-    }
-
-    if (page >= options.length / perPage) {
-      console.log("LETS TEST?");
-    }
-
-    setPage((p) => p + 1);
-  }
-
-  const totalPages = context2.total;
-  console.log("context2:", context2);
+  const paginatedOptions = useMemo(() => {
+    return options.slice(
+      context2.current * context2.perPage,
+      context2.perPage * (context2.current + 1)
+    );
+  }, [options, context2.current, context2.perPage]);
 
   return (
-    <div>
-      <h2 onClick={() => send("PREV_PAGE")}>OPREV</h2>
-      <h2 onClick={() => send("NEXT_PAGE")}>NEXT</h2>
-      <div onClick={() => setPagination(1)}>
-        {options
-          .slice(
-            context2.current,
-            context2.perPage * context2.current || context2.perPage
-          )
-          .map((e) => {
-            return <div>{JSON.stringify(e)}</div>;
-          })}
-      </div>
-    </div>
+    <Container>
+      <Pagination
+        size={context2.total}
+        onPrev={() => send("PREV_PAGE")}
+        onNext={() => send("NEXT_PAGE")}
+        onTarget={(page) => send({ type: "JUMP_TO_PAGE", page })}
+        selected={context2.current}
+        canNext={state.can("NEXT_PAGE")}
+        canPrev={state.can("PREV_PAGE")}
+      />
+
+      <DbRendered options={paginatedOptions} />
+    </Container>
   );
 }

@@ -12,9 +12,13 @@ export interface Typegen0 {
     guards: never;
     delays: never;
   };
-  eventsCausingActions: {};
+  eventsCausingActions: {
+    update: "UPDATE_CTX";
+  };
   eventsCausingServices: {};
-  eventsCausingGuards: {};
+  eventsCausingGuards: {
+    hasAccepted: "By Proximity";
+  };
   eventsCausingDelays: {};
   matchesStates: "By Location" | "By Provider" | "By Proximity";
   tags: never;

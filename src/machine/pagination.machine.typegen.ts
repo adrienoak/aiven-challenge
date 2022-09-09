@@ -16,11 +16,13 @@ export interface Typegen0 {
     assignTotal: "TOTAL_PAGES";
     goNext: "NEXT_PAGE";
     goPrev: "PREV_PAGE";
+    jumpToPage: "JUMP_TO_PAGE";
   };
   eventsCausingServices: {};
   eventsCausingGuards: {
     canGoNext: "NEXT_PAGE";
     canGoPrev: "PREV_PAGE";
+    pageIsPossible: "JUMP_TO_PAGE";
   };
   eventsCausingDelays: {};
   matchesStates: "canChange" | "idle";

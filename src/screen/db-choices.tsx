@@ -1,57 +1,63 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMachine } from "@xstate/react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { getCloudData } from "../api/clouds";
+import { useCoordinates, useIsAccepted } from "../App";
 import { ByRegion } from "../components/ByLocation";
 import { ByProvider } from "../components/ByProvider";
 import { ByProximity } from "../components/ByProximity";
+import { Option } from "../components/Option";
 import { cloudOptionsMachine } from "../machine/cloud-options.machine";
 import { GeoLocationMachineSchema } from "../machine/geo-location.machine";
 
-export function DbChoices({ context }: { context: GeoLocationMachineSchema }) {
+export function DbChoices() {
+  const isAccepted = useIsAccepted();
+
   const { data, isLoading } = useQuery(["KEY"], ({ signal }) =>
     getCloudData(signal)
   );
 
-  const organizedByLocation = useMemo(() => {
-    if (isLoading || !data) {
-      return [];
-    }
+  const cloudMachine = useMemo(
+    () => cloudOptionsMachine(isAccepted),
+    [isAccepted]
+  );
 
-    return Array.from(new Set(data.map((e) => e.geo_region)));
-  }, [isLoading, data]);
+  const [state, send] = useMachine(cloudMachine);
 
-  const [state, send] = useMachine(cloudOptionsMachine);
-  console.log("state:", state.value);
+  useEffect(() => {
+    send({ type: "UPDATE_CTX", data: isAccepted });
+  }, [isAccepted, send]);
 
   return (
-    <div>
-      <h1 className="text-xl"> Heloo {state.value.toString()}</h1>
-      <nav
-        style={{
-          display: "flex",
-          justifyContent: "space-around",
-          width: "80%",
-          background: "red",
-        }}
-      >
-        <div style={{ cursor: "pointer" }} onClick={() => send("By Provider")}>
-          By Provider
-        </div>
-        <div style={{ cursor: "pointer" }} onClick={() => send("By Location")}>
-          By Region
+    <>
+      <nav className="h-20 bg-orange-600/40"></nav>
+      <div className="mt-8">
+        <div className="flex justify-center space-x-40">
+          <Option
+            option="Provider"
+            onClick={() => {
+              send("By Provider");
+            }}
+          />
+          <Option
+            option="Region"
+            onClick={() => {
+              send("By Location");
+            }}
+          />
+          <Option
+            onClick={() => {
+              send("By Proximity");
+            }}
+            option="Proximity"
+            enabled={isAccepted}
+          />
         </div>
 
-        <div style={{ cursor: "pointer" }} onClick={() => send("By Proximity")}>
-          By Proximity
-        </div>
-      </nav>
-
-      {state.matches("By Location") && <ByRegion data={data} />}
-      {state.matches("By Provider") && <ByProvider data={data} />}
-      {state.matches("By Proximity") && (
-        <ByProximity data={data} context={context} />
-      )}
-    </div>
+        {state.matches("By Location") && <ByRegion data={data} />}
+        {state.matches("By Provider") && <ByProvider data={data} />}
+        {state.matches("By Proximity") && <ByProximity data={data} />}
+      </div>
+    </>
   );
 }
