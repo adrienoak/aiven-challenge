@@ -3,7 +3,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { makeQueryClient } from "./api/query";
 import App from "./App";
-import "./index.css";
 
 const appQueryClient = makeQueryClient();
 

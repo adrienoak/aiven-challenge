@@ -26,7 +26,7 @@ export function DbChoices({ context }: { context: GeoLocationMachineSchema }) {
 
   return (
     <div>
-      <h1> Heloo {state.value.toString()}</h1>
+      <h1 className="text-xl"> Heloo {state.value.toString()}</h1>
       <nav
         style={{
           display: "flex",
