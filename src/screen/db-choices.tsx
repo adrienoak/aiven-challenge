@@ -31,7 +31,7 @@ export function DbChoices() {
   return (
     <>
       <nav className="h-20 bg-orange-600/40"></nav>
-      <div className="mt-8">
+      <div className="mt-10">
         <div className="flex justify-center space-x-40">
           <Option
             option="Provider"
