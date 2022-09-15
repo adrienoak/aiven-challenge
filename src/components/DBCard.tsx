@@ -1,4 +1,4 @@
-import { ICloudInformation } from "../api/clouds";
+import { ICloudInformation } from "../utils/cloud-utils";
 
 export function DbCard({ db }: { db: ICloudInformation }) {
   return (

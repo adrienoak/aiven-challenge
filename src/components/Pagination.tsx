@@ -25,8 +25,9 @@ export function Pagination({
   const pageArr = useMemo(() => {
     return Array.from({ length: size }, (_, i) => i);
   }, [size]);
+
   return (
-    <div className="flex justify-between mb-8">
+    <div className="flex justify-between mt-8">
       <DirectionButton onClick={onPrev} value="Prev" enabled={canPrev} />
       {pageArr.map((e) => (
         <PaginationButton
@@ -58,7 +59,7 @@ function DirectionButton({
       className={`${baseStyles} ${
         enabled
           ? "cursor-pointer "
-          : "cursor-not-allowed bg-gray-900/80 text-gray-100"
+          : "cursor-not-allowed bg-gray-900/80 text-gray-100 hover:text-gray-700 hover:bg-gray-900/90"
       }`}
       onClick={onClick}
     >
@@ -71,8 +72,7 @@ function PaginationButton({
   value,
   onClick,
   selected = false,
-  enabled = true,
-}: IPaginationButtonProps) {
+}: Omit<IPaginationButtonProps, "enabled">) {
   return (
     <div
       className={`${baseStyles} ${

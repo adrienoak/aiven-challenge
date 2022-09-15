@@ -1,6 +1,3 @@
-import type { QueryClientConfig } from "@tanstack/react-query";
-import { QueryClient } from "@tanstack/react-query";
+export * from "./make-query-client";
 
-export function makeQueryClient(args?: QueryClientConfig) {
-  return new QueryClient(args);
-}
+export * from "./query-keys";

@@ -1,7 +1,19 @@
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEYS } from "../query";
 import axios from "axios";
-import { IProviders } from "../internal/providers";
+import { IProviders } from "../../internal/providers";
 import orderByDistance from "geolib/es/orderByDistance";
-import { Coords } from "../machine/geo-location.machine";
+import { Coords } from "../../machine/geo-location.machine";
+
+export function useGetCloudData(enabled = true) {
+  return useQuery(
+    [QUERY_KEYS.CLOUD_DATA],
+    ({ signal }) => getCloudData(signal),
+    {
+      enabled,
+    }
+  );
+}
 
 export type ICloudInformation = {
   cloud_description: string;
@@ -17,7 +29,7 @@ export type IGetCloud = {
 
 const API_URL = "https://api.aiven.io/v1/clouds";
 
-export async function getCloudData(signal?: AbortSignal) {
+async function getCloudData(signal?: AbortSignal) {
   const { data } = await axios.get<IGetCloud>(API_URL, { signal });
 
   return data.clouds;

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { IProviders } from "../internal/providers";
-import { getCloudsByProviders, ICloudInformation } from "./clouds";
+import { getCloudsByProviders, ICloudInformation } from "./cloud-utils";
 
 type Base = `${IProviders}-${string}`;
 

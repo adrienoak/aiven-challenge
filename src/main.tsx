@@ -3,7 +3,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { makeQueryClient } from "./api/query";
-import App, { GeoProvider } from "./App";
+import App from "./App";
+import { GeoLocationProvider } from "./context";
 
 const appQueryClient = makeQueryClient();
 
@@ -11,9 +12,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={appQueryClient}>
-        <GeoProvider>
+        <GeoLocationProvider>
           <App />
-        </GeoProvider>
+        </GeoLocationProvider>
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>
