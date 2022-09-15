@@ -1,5 +1,5 @@
 import { Container } from "../../components/Container";
-import { DbRendered } from "../../components/DbRendered";
+import { DbRenderer } from "../../components/DbRenderer";
 import { Spinner } from "../../components/Spinner";
 import { useProximity } from "./proximity.hooks";
 import { ProximityNotEnabled } from "./ProximityNotEnabled";
@@ -10,7 +10,7 @@ export function Promixity() {
   if (isNotDecision) {
     return (
       <Container>
-        <div className="h-80 flex items-center justify-center flex-col">
+        <div className="flex flex-col items-center justify-center h-80">
           <p className="mb-10 text-xl text-gray-900">
             This feature needs geolocation to function correctly
           </p>
@@ -29,7 +29,7 @@ export function Promixity() {
 
   return (
     <Container>
-      <DbRendered options={options} />
+      <DbRenderer options={options} />
     </Container>
   );
 }

@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useParamsDefaultValue } from "./params-default-value";
 
 export function useSelectedOption<
   Obj extends Record<string, any>,
   NewState extends keyof Obj & string
->(record: Obj, key: string): [NewState, (newState: NewState) => void] {
+>(
+  record: Obj,
+  key: string
+): [NewState, (newState: NewState, clear?: boolean) => void, URLSearchParams] {
   const [selected, setSelected] = useState("" as NewState);
 
   const [searchParam, setSearchParams] = useSearchParams({
@@ -13,20 +17,29 @@ export function useSelectedOption<
 
   const selectedParam = (searchParam.get(key) as NewState) || selected;
 
-  function selectOption(newKey: NewState) {
-    if (!newKey) {
-      return;
-    }
+  const selectOption = useCallback(
+    (newKey: NewState, clear: boolean = false) => {
+      if (newKey === selectedParam) {
+        return;
+      }
 
-    setSelected(newKey);
-    setSearchParams({ [key]: newKey });
-  }
+      if (!newKey) {
+        return;
+      }
 
-  useEffect(() => {
-    if (!selected && !selectedParam) {
-      selectOption(Object.keys(record)[0] as NewState);
-    }
-  }, [selected, selectedParam, record]);
+      setSelected(newKey);
+      if (clear) {
+        setSearchParams({ [key]: newKey });
+        return;
+      }
 
-  return [selectedParam, selectOption];
+      searchParam.set(key, newKey);
+      setSearchParams(searchParam);
+    },
+    [selected, setSearchParams, key]
+  );
+
+  useParamsDefaultValue(Object.keys(record ?? {}), key);
+
+  return [selectedParam, selectOption, searchParam];
 }

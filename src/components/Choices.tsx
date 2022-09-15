@@ -1,19 +1,27 @@
 interface IChoice {
-  option: string;
+  choice: string;
   onClick: () => Promise<void> | void;
   selected: boolean;
+  sm?: boolean;
 }
 
-export function Choice({ onClick, selected, option }: IChoice) {
-  const selectedClasses = selected
-    ? "bg-gray-300 text-gray-500 hover:text-gray-500 hover:border-neutral-800 "
-    : " text-gray-500";
+export function Choice({ onClick, selected, choice, sm = false }: IChoice) {
+  const sizeClasses = {
+    default: "text-lg p-2",
+    sm: "text-sm px-5 max-w-max",
+  };
+
+  const baseClasses =
+    "text-center rounded-full backdrop-blur-sm border-solid  border-2 font-medium text-gray-700 transition duration-35  capitalize text-brandGrey-orange border-brandGrey-orange   cursor-pointer hover:border-brandGrey-darkOrange hover:text-brandGrey-darkOrange ";
+
   return (
     <div
-      className={`cursor-pointer p-2 rounded-lg text-lg backdrop-blur-sm border-solid  border-2 text-gray-700 transition duration-35 hover:bg-gray-500/10 border-neutral-800 capitalize ${selectedClasses}`}
+      className={`${baseClasses} ${
+        sm ? sizeClasses.sm : sizeClasses.default
+      }    ${selected ? "text-opacity-80 border-opacity-80" : ""}`}
       onClick={onClick}
     >
-      {option}
+      {choice}
     </div>
   );
 }

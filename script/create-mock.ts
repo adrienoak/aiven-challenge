@@ -14,7 +14,6 @@ async function main() {
   const json = await getCloudData();
 
   const path = join(process.cwd(), "mock.json");
-  console.log("path:", path);
 
   await writeFile(path, JSON.stringify(json, null, 4), { encoding: "utf-8" });
 }

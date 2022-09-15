@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHref, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useIsGeoLocationAccepted } from "../../context";
 import { ROUTES } from "../../routes";
 import { Option } from "../Option";
@@ -10,37 +10,43 @@ interface ILayoutProps {
 }
 
 export function Layout({ children }: ILayoutProps) {
-  const { isAccepted, send } = useLayout();
-  const navigate = useNavigate();
+  const { isAccepted, navigate, pathname } = useLayout();
 
   return (
     <>
-      <nav className="h-20 bg-orange-600/40"></nav>
+      <nav className="h-20 bg-orange-600/40 bg-brandGrey"></nav>
       <div className="mt-10">
-        <div className="flex justify-center space-x-40">
+        <div className="flex flex-wrap gap-4 md:justify-center ">
           <Option
             option="Provider"
             onClick={() => {
-              send("By Provider");
               navigate(ROUTES.HOME_PAGE);
             }}
+            current={pathname === "/"}
           />
           <Option
             option="Region"
             onClick={() => {
-              send("By Location");
               navigate(ROUTES.REGION);
             }}
+            current={pathname.includes("region")}
+          />
+          <Option
+            onClick={() => {
+              navigate(ROUTES.PROVIDER_AND_REGION);
+            }}
+            option="Region and Provider"
+            current={pathname.includes("combined")}
           />
           <Option
             onClick={() => {
               if (isAccepted) {
-                send("By Proximity");
                 navigate(ROUTES.PROXIMITY);
               }
             }}
             option="Proximity"
             enabled={isAccepted}
+            current={pathname.includes("proximity")}
           />
         </div>
         {children}

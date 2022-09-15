@@ -12,16 +12,7 @@ export function useHome() {
   const [selected, setSelected] = useSelectedOption(regions, "provider");
 
   const options = useMemo(() => {
-    const length = Object.fromEntries(
-      Object.keys(regions ?? {}).map((e) => [
-        e,
-        Object.values(regions[e as keyof typeof regions]).length,
-      ])
-    );
-
-    return {
-      length,
-    };
+    return Object.values(regions);
   }, [regions]);
 
   const dbList = useMemo(() => {
@@ -34,5 +25,6 @@ export function useHome() {
     selected,
     setSelected,
     dbList,
+    regions,
   };
 }

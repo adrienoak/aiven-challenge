@@ -1,6 +1,6 @@
 import { Choice } from "../../components/Choices";
 import { Container } from "../../components/Container";
-import { DbRendered } from "../../components/DbRendered";
+import { DbRenderer } from "../../components/DbRenderer";
 import { OptionHeader } from "../../components/OptionHeader";
 import { useRegion } from "./region.hook";
 
@@ -15,13 +15,13 @@ export function Region() {
           <Choice
             key={e}
             onClick={() => setSelected(e)}
-            option={e}
+            choice={e}
             selected={e === selected}
           />
         )}
       />
 
-      <DbRendered options={dbList} />
+      <DbRenderer options={dbList} />
     </Container>
   );
 }

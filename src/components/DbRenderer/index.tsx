@@ -1,15 +1,15 @@
 import { useMachine } from "@xstate/react";
-import { ReactElement, useEffect, useMemo } from "react";
-import { ICloudInformation } from "../utils/cloud-utils";
-import { makePaginationMachine } from "../machine/pagination.machine";
-import { DbCard } from "./DBCard";
-import { Pagination } from "./Pagination";
+import { useEffect, useMemo } from "react";
+import { makePaginationMachine } from "../../machine/pagination.machine";
+import { ICloudInformation } from "../../api/service";
+import { DbCard } from "../DBCard";
+import { Pagination } from "../Pagination";
 
 interface IDbRenderedProps {
   options: ICloudInformation[];
 }
 
-export function DbRendered({ options }: IDbRenderedProps) {
+export function DbRenderer({ options }: IDbRenderedProps) {
   const machineMaker = useMemo(() => makePaginationMachine(options), [options]);
 
   const [state, send] = useMachine(machineMaker);
@@ -29,7 +29,7 @@ export function DbRendered({ options }: IDbRenderedProps) {
 
   return (
     <div className="mb-8">
-      <div className=" grid gap-x-4 gap-y-4 md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-min justify-center">
+      <div className="grid justify-center gap-x-4 gap-y-4 md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-min">
         {paginatedOptions.map((e) => (
           <DbCard key={e.cloud_name} db={e} />
         ))}
