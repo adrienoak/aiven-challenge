@@ -27,7 +27,7 @@ export type IGetCloud = {
   clouds: ICloudInformation[];
 };
 
-const API_URL = "https://api.aiven.io/v1/clouds";
+export const API_URL = "https://api.aiven.io/v1/clouds";
 
 async function getCloudData(signal?: AbortSignal) {
   const { data } = await axios.get<IGetCloud>(API_URL, { signal });

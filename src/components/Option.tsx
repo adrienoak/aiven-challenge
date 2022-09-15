@@ -12,7 +12,9 @@ export function Option({ option, onClick, enabled = true }: IOption) {
     : "cursor-not-allowed";
 
   return (
-    <div
+    <button
+      disabled={!enabled}
+      aria-disabled={!enabled}
       className={`px-14 py-4 rounded-lg text-3xl backdrop-blur-sm bg-orange-600/50 text-white ${enabledClass} transition duration-75 group relative`}
       onClick={onClick}
     >
@@ -22,7 +24,7 @@ export function Option({ option, onClick, enabled = true }: IOption) {
           Feature not enabled. Please allow website to know your location
         </ToolTip>
       )}
-    </div>
+    </button>
   );
 }
 
